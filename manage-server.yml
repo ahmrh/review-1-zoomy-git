@@ -1,0 +1,51 @@
+---
+- name: Managing a server (asia)
+  hosts: asia:ungrouped
+  tasks:
+    - name: Adding users
+	user:
+	  name: "{{ item.name }}"
+	  groups: "{{ item.groups }}"
+	  state: present
+	loop:
+	  - { name: 'ayam', groups: {'unggas', 'sate'} }
+	  - { name: 'bangau', groups: 'unggas' }
+	  - { name: 'cicak', groups: 'reptil' }
+	  - { name: 'kadal', groups: 'reptil' }
+	  - { name: 'kambing', groups: 'sate' }
+
+- name: Managing a server (non-asia)
+  hosts: !asia
+  tasks:
+    - name: Installing packages
+	yum:
+	  name: 
+	    - httpd
+	    - sshd
+	    - firewalld	
+	  state: present
+
+- name: Managing a server (servera, serverb)
+  hosts: development
+  tasks:
+    - name: Installing group packages rpm development
+ 	yum:
+	  name: "@Development tools"
+	  state: present
+    - name: Installing mariadb
+ 	yum:
+	  name: mariadb
+	  state: present
+
+- name: Managing a server (serverc, serverd)
+  hosts: production
+  tasks:
+    - name: Turning off firewall
+ 	service:
+	  name: firewalld
+	  state: stopped
+	  enabled: no
+    - name: Installing tmux
+ 	yum:
+	  name: tmux
+	  state: present

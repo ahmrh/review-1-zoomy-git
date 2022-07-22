@@ -1,0 +1,51 @@
+---
+- name: Reversing a server (asia)
+  hosts: asia:ungrouped
+  tasks:
+    - name: Removing users
+	user:
+	  name: "{{ item.name }}"
+	  groups: "{{ item.groups }}"
+	  state: absent
+	loop:
+	  - { name: 'ayam', groups: {'unggas', 'sate'} }
+	  - { name: 'bangau', groups: 'unggas' }
+	  - { name: 'cicak', groups: 'reptil' }
+	  - { name: 'kadal', groups: 'reptil' }
+	  - { name: 'kambing', groups: 'sate' }
+
+- name: Reversing a server (non-asia)
+  hosts: !asia
+  tasks:
+    - name: Uninstalling packages
+	yum:
+	  name: 
+	    - httpd
+	    - sshd
+	    - firewalld	
+	  state: absent
+
+- name: Reversing a server (servera, serverb)
+  hosts: development
+  tasks:
+    - name: Uninstalling group packages rpm development
+ 	yum:
+	  name: "@Development tools"
+	  state: absent
+    - name: Uninstalling mariadb
+ 	yum:
+	  name: mariadb
+	  state: absent
+
+- name: Reversing a server (serverc, serverd)
+  hosts: production
+  tasks:
+    - name: Turning on firewall
+ 	service:
+	  name: firewalld
+	  state: started
+	  enabled: yes
+    - name: Uninstalling tmux
+ 	yum:
+	  name: tmux
+	  state: absent

@@ -1,0 +1,16 @@
+[development]
+server[a:b].lab.example.com
+
+[production]
+server[c:d].lab.example.com
+
+[jakarta]
+servera.lab.example.com
+serverc.lab.example.com
+
+[tokyo]
+serverb.lab.example.com
+
+[asia:children]
+jakarta
+tokyo
